@@ -2,7 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { specialFamiliarEquipmentPlan } from "../src/outfit/specialFamiliarEquipmentPlan.ts";
+import {
+  specialFamiliarEquipmentPlan,
+} from "../src/outfit/specialFamiliarEquipmentPlan.ts";
 
 // Regression: In the Coral Corral, Jill without independent underwater
 // breathing requires das boot. Forcing the LED candle prevents +sea.
@@ -48,6 +50,9 @@ test("barf outfit builder uses the actual breathing-slot predicate", () => {
     source,
     /specialFamiliarEquipmentPlan\(\s*Boolean\(specialFamiliar\?\.equip\),\s*familiarSlotNeededForBreathing\(FarmingStrategy\.location, spec\.familiar\),\s*\)/,
   );
-  assert.match(source, /if \(applySpecialEquipment && specialFamiliar\?\.equip\)/);
+  assert.match(
+    source,
+    /if \(applySpecialEquipment && specialFamiliar\?\.equip\)/,
+  );
   assert.match(source, /if \(applySpecialConfiguration\)/);
 });
