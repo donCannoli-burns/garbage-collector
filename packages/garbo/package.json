@@ -6,7 +6,7 @@
   "main": "dist/scripts/garbage-collector/garbo.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --experimental-strip-types --test test/specialFamiliarEquipment.test.mjs",
     "build": "rollup -c rollup.config.ts && yarn run copyStatic",
     "watch": "rollup -c rollup.config.ts --watch",
     "copyStatic": "copyfiles --up 1 \"static/**/*\" dist",

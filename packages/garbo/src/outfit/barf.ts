@@ -34,6 +34,7 @@ import {
   bestBjornalike,
   BonusEquipMode,
   cleaverCheck,
+  familiarSlotNeededForBreathing,
   modeValueOfItem,
   modeValueOfMeat,
   validateGarbageFoldable,
@@ -42,6 +43,7 @@ import { trackMarginalTurnExtraValue } from "../session";
 import { FarmingStrategy } from "../farmingStrategy";
 import { specialFamiliarOutfits } from "../familiar/specialFamiliarOutfits";
 import { stillsuitBonus } from "../resources/stillsuit";
+import { specialFamiliarEquipmentPlan } from "./specialFamiliarEquipmentPlan";
 
 function chooseGun() {
   if (have($item`love`)) {
@@ -128,8 +130,20 @@ export function computeBarfOutfit(
   applyCheeseBonus(outfit, BonusEquipMode.BARF);
 
   const specialFamiliar = specialFamiliarOutfits.get(spec.familiar);
-  if (specialFamiliar?.equip) outfit.equip(specialFamiliar.equip);
-  specialFamiliar?.configureOutfit?.(outfit);
+  // Jill's LED candle is profitable, but makes +sea impossible when her
+  // familiar slot is needed for das boot or another underwater breathing item.
+  // Leave the slot open and do not configure the candle when it cannot be used.
+  const { equip: applySpecialEquipment, configure: applySpecialConfiguration } =
+    specialFamiliarEquipmentPlan(
+      Boolean(specialFamiliar?.equip),
+      familiarSlotNeededForBreathing(FarmingStrategy.location, spec.familiar),
+    );
+  if (applySpecialEquipment && specialFamiliar?.equip) {
+    outfit.equip(specialFamiliar.equip);
+  }
+  if (applySpecialConfiguration) {
+    specialFamiliar?.configureOutfit?.(outfit);
+  }
 
   const bjornChoice = chooseBjorn(BonusEquipMode.BARF, spec.familiar, sim);
 

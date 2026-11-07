@@ -27,7 +27,7 @@ jobs:
       - run: yarn install --immutable --immutable-cache
       - run: yarn workspace garbo-lib build
       - run: yarn check
-      #- run: yarn run test TODO: Readd once we have tests
+      - run: yarn workspace garbo test
 
   lint-all:
     runs-on: ubuntu-latest
@@ -44,6 +44,8 @@ jobs:
       - run: yarn run lint
 
   deploy:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     needs: [test-script, lint-all]
     if: github.ref == 'refs/heads/main'
